@@ -131,7 +131,7 @@ public class wordList {
 
     public static void main(String[] args) {
         //TODO: rn based on user input, will change to accomadate hardware
-        switch(args[0]) {
+        switch(Integer.parseInt(args[0])) {
             case 1:
             String[][] easy = getEasyList();
             for (String[] s : easy) {
@@ -153,7 +153,7 @@ public class wordList {
                 playFile("Hard Converted/" + str);
             }
             break;
-            default: System.out.println("Bad Input.")
+            default: System.out.println("Bad Input.");
 
         }
 
