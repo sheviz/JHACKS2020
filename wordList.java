@@ -141,6 +141,16 @@ public class wordList {
         }
     }
 
+    public static int getNum(String name) {
+        switch(name) {
+            case "noun" : return 1;
+            case "verb" : return 2;
+            case "adj" : return 3;
+            case "adv" : return 4;
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
         //TODO: rn based on user input, will change to accomadate hardware
         switch(Integer.parseInt(args[0])) {
@@ -149,6 +159,8 @@ public class wordList {
             for (String[] s : easy) {
                 String str = s[1];
                 playFile("Easy Converted/" + str);
+                // if returned val != getNum(str[2]) break;
+                
             }
             break;
             case 2:
@@ -156,6 +168,7 @@ public class wordList {
             for (String[] s : medium) {
                 String str = s[1];
                 playFile("Medium Converted/" + str);
+                // if returned val != getNum(str[2]) break;
             }
             break;
             case 3:
@@ -163,6 +176,7 @@ public class wordList {
             for (String[] s : hard) {
                 String str = s[1];
                 playFile("Hard Converted/" + str);
+                // if returned val != getNum(str[2]) break;
             }
             break;
             default: System.out.println("Bad Input.");
