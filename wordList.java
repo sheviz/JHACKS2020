@@ -1,9 +1,9 @@
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
+import java.util.Scanner;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -14,10 +14,10 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import processing.serial.*;
+Serial myPort;
 
-public class wordList {
-
-    public static String[][] getEasyList() {
+  String[][] getEasyList() {
         String[][] easy = {
             {"key", "key.wav", "noun"}, 
             {"cup", "cup.wav", "noun"},
@@ -54,7 +54,7 @@ public class wordList {
             return easy;
     }
 
-    public static String[][] getMediumList() {
+     String[][] getMediumList() {
         String[][] medium = {
             {"time", "time.wav", "noun"}, 
             {"hand", "hand.wav", "noun"},
@@ -86,7 +86,7 @@ public class wordList {
             return medium;
     }
 
-    public static String[][] getHardList() {
+    String[][] getHardList() {
          String[][] difficult = {
             {"government", "government.wav", "noun"}, 
             {"industry", "industry.wav", "noun"},
@@ -117,9 +117,10 @@ public class wordList {
             strList.toArray(difficult);
             return difficult;
     }
-
-    public static void playFile(String name, int num) {
+        void playFile(String name, int num) {
         File audioFile = new File(name);
+        
+
         try {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
              AudioFormat format = audioStream.getFormat();
@@ -133,6 +134,7 @@ public class wordList {
             System.out.println("Oh dear");
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Oh dear pt 2");
         } catch (LineUnavailableException e) {
             System.out.println("Oh dear pt 3");
@@ -141,7 +143,7 @@ public class wordList {
         }
     }
 
-    public static int getNum(String name) {
+    int getNum(String name) {
         switch(name) {
             case "noun" : return 1;
             case "verb" : return 2;
@@ -151,54 +153,138 @@ public class wordList {
         return 0;
     }
 
-    public static void main(String[] args) {
-        //TODO: rn based on user input, will change to accomadate hardware
-        boolean correct = true;
-        while(correct) {
-            switch(Integer.parseInt(args[0])) {
-                case 1:
-                String[][] easy = getEasyList();
-                for (String[] s : easy) {
-                    String str = s[1];
-                    playFile("Easy Converted/" + str, 2000);
+boolean correct = true;
+int noun;
+int verb;
+int adj;
+int adv;
+int level;
+int lvlCount =1;
+int subject;
+int subCount=1;
+boolean vCheck = false;
+boolean aCheck = false;
+String[][] easy = getEasyList();
+String[][] medium = getMediumList();
+String[][] hard = getHardList();
+int i = 0;
 
-                    switch(s[2]) {
-                        case 1: if (noun != 1) break;
-                        case 2: if (verb != 1) break;
-                        case 3: if (adj != 10) break;
-                        case 4: if (adv != 5) break;
-                    }
-                    
-                }
-                break;
-                case 2:
-                String[][] medium = getMediumList();
-                for (String[] s : medium) {
-                    String str = s[1];
-                    playFile("Medium Converted/" + str, 2000);
-                    switch(s[2]) {
-                        case 1: if (noun != 1) break;
-                        case 2: if (verb != 1) break;
-                        case 3: if (adj != 10) break;
-                        case 4: if (adv != 5) break;
-                    }
-                }
-                break;
-                case 3:
-                String[][] hard = getHardList();
-                for (String[] s : hard) {
-                    String str = s[1];
-                    playFile("Hard Converted/" + str, 2000);
-                    switch(s[2]) {
-                        case 1: if (noun != 1) break;
-                        case 2: if (verb != 1) break;
-                        case 3: if (adj != 10) break;
-                        case 4: if (adv != 5) break;
-                    }
-                }
-                break;
-                default: System.out.println("Bad Input.");
-            }
+void setup() {
+  println(Serial.list()); // list all available serial ports
+  myPort = new Serial(this, Serial.list()[0], 9600); // define input port
+  myPort.clear(); // clear the port of any initial junk
+  size(1000, 750);
+  background(0,0, 150);
+  stroke(0,0,0);
+  fill(255,255,255);
+  ellipse(100, 100, 75, 75);
+  textSize(15);
+  text("Noun", 77, 165);
+  ellipse(400, 100, 75, 75);
+  text("Verb", 383, 165);
+  ellipse(100, 500, 75, 75);
+  text("Adjective", 70, 565);
+ 
+}
+
+void MouseReleased() {
+  System.out.println(mouseX + " jjj");
+  if(63 <=  mouseX && mouseX <= 137 && mouseY >= 63 && mouseY <=137) {
+    System.out.println("Hurray");
+    lvlCount = 1;
+  }
+}
+
+
+int runGrammarBoop(int i) {
+  String str ="";
+  switch(3) {
+    case 1:
+         str = easy[i][1];
+        playFile("Easy Converted/" + str, 4000);
+        return getNum(easy[i][2]);
+
+    case 2:
+         str = medium[i][1];
+        playFile("Medium Converted/" + str, 4000);
+        return getNum(medium[i][2]);
+
+    case 3:
+    
+         str = hard[i][1];
+        playFile("Hard Converted/" + str, 4000);
+        return getNum(hard[i][2]);
+
+    default: System.out.println("Bad Input.");
+  }
+  return 0;
+}
+
+boolean checkGrammarBoop(int num) {
+  switch(num) {
+    case 1: if (noun != 1) return false; else return true; 
+    case 2: if (verb != 10) return false; else return true;
+    case 3: if (adj != 1) return false; else return true; 
+    case 4: if (adv != 500) return false; else return true; 
+  }
+  return true;
+}
+
+boolean runHistoryBoop() {
+  return true;
+}
+
+
+void draw () {
+  vCheck = false;
+  aCheck = false;
+  if(subCount == 1) {
+    int num = runGrammarBoop(i);
+    i++;
+    //delay(3000);
+    noun = 0;
+    verb = 0;
+    adj = 0;
+    adv = 0;
+    
+    while (myPort.available () > 0){
+      String inString = myPort.readStringUntil('\n');
+      if(inString != null) {
+        inString = trim(inString);
+        String[] xyRaw = splitTokens(inString, "\t");
+        if(xyRaw.length == 5) {
+           if(noun != 1) noun = int(xyRaw[0]);
+           if (verb > .6) vCheck = true; verb = int(xyRaw[1]);
+           if (adj != 1) adj = int(xyRaw[2]);
+           if (adv > 100) aCheck = true; adv = int(xyRaw[3]);
+           //level = int(xyRaw[4]);
+           //subject = int(xyRaw[5]);
+  
         }
+      }
     }
+    if (verb >=.6) {
+      System.out.println("Didn't twist back");
+      for(;;) {}
+    }
+    if(vCheck) verb = 10;
+    if(aCheck) adv = 500;
+    if(!checkGrammarBoop(num)) {
+      fill(225,0,0);
+      stroke(225,0,0);
+      textSize(30);
+      text("You Lose", 300, 350);
+      System.out.println("oh no no");
+      for(;;) {}
+    }
+    System.out.println("hello");
+  } else {
+    if(!runHistoryBoop()) {
+      for(;;) {}
+    }
+  }
+  
+  
+  
+  
 }
