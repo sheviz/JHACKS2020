@@ -118,7 +118,7 @@ public class wordList {
             return difficult;
     }
 
-    public static void playFile(String name) {
+    public static void playFile(String name, int num) {
         File audioFile = new File(name);
         try {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
@@ -128,7 +128,7 @@ public class wordList {
             Clip audioClip = (Clip) AudioSystem.getLine(info);
             audioClip.open(audioStream);
             audioClip.start();
-            Thread.sleep(1000);
+            Thread.sleep(num);
         } catch (UnsupportedAudioFileException e) {
             System.out.println("Oh dear");
             e.printStackTrace();
@@ -153,34 +153,52 @@ public class wordList {
 
     public static void main(String[] args) {
         //TODO: rn based on user input, will change to accomadate hardware
-        switch(Integer.parseInt(args[0])) {
-            case 1:
-            String[][] easy = getEasyList();
-            for (String[] s : easy) {
-                String str = s[1];
-                playFile("Easy Converted/" + str);
-                // if returned val != getNum(str[2]) break;
-                
-            }
-            break;
-            case 2:
-            String[][] medium = getMediumList();
-            for (String[] s : medium) {
-                String str = s[1];
-                playFile("Medium Converted/" + str);
-                // if returned val != getNum(str[2]) break;
-            }
-            break;
-            case 3:
-            String[][] hard = getHardList();
-            for (String[] s : hard) {
-                String str = s[1];
-                playFile("Hard Converted/" + str);
-                // if returned val != getNum(str[2]) break;
-            }
-            break;
-            default: System.out.println("Bad Input.");
+        boolean correct = true;
+        while(correct) {
+            switch(Integer.parseInt(args[0])) {
+                case 1:
+                String[][] easy = getEasyList();
+                for (String[] s : easy) {
+                    String str = s[1];
+                    playFile("Easy Converted/" + str, 2000);
 
+                    switch(s[2]) {
+                        case 1: if (noun != 1) break;
+                        case 2: if (verb != 1) break;
+                        case 3: if (adj != 10) break;
+                        case 4: if (adv != 5) break;
+                    }
+                    
+                }
+                break;
+                case 2:
+                String[][] medium = getMediumList();
+                for (String[] s : medium) {
+                    String str = s[1];
+                    playFile("Medium Converted/" + str, 2000);
+                    switch(s[2]) {
+                        case 1: if (noun != 1) break;
+                        case 2: if (verb != 1) break;
+                        case 3: if (adj != 10) break;
+                        case 4: if (adv != 5) break;
+                    }
+                }
+                break;
+                case 3:
+                String[][] hard = getHardList();
+                for (String[] s : hard) {
+                    String str = s[1];
+                    playFile("Hard Converted/" + str, 2000);
+                    switch(s[2]) {
+                        case 1: if (noun != 1) break;
+                        case 2: if (verb != 1) break;
+                        case 3: if (adj != 10) break;
+                        case 4: if (adv != 5) break;
+                    }
+                }
+                break;
+                default: System.out.println("Bad Input.");
+            }
         }
     }
 }
