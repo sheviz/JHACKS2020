@@ -45,6 +45,9 @@ public class wordList {
             {"quickly", "quickly.wav", "adv"},
             {"nearly", "nearly.wav", "adv"}
             };
+            List<String[]> strList = Arrays.asList(easy);
+            Collections.shuffle(strList);
+            strList.toArray(easy);
             return easy;
     }
 
@@ -74,6 +77,9 @@ public class wordList {
             {"very", "very.wav", "adv"},
             {"always", "always.wav", "adv"}
             };
+            List<String[]> strList = Arrays.asList(medium);
+            Collections.shuffle(strList);
+            strList.toArray(medium);
             return medium;
     }
 
@@ -103,6 +109,9 @@ public class wordList {
             {"never", "never.wav", "adv"},
             {"almost", "almost.wav", "adv"}
             };
+            List<String[]> strList = Arrays.asList(difficult);
+            Collections.shuffle(strList);
+            strList.toArray(difficult);
             return difficult;
     }
 
@@ -156,9 +165,5 @@ public class wordList {
             default: System.out.println("Bad Input.");
 
         }
-
-        
-      
-
     }
 }
